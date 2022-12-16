@@ -4,6 +4,9 @@ import webcolors
 
 def pixelate(input_file_path, pixel_size, scale_depth):
     image = Image.open(input_file_path)
+
+    image = image.convert("RGB", palette=Image.WEB, colors=8)
+
     image = image.resize(
         (image.size[0] // pixel_size, image.size[1] // pixel_size),
         Image.NEAREST
@@ -13,6 +16,8 @@ def pixelate(input_file_path, pixel_size, scale_depth):
         Image.NEAREST
     )
 
+
+
     if image.width > 100 or image.height > 100:
         if image.height > image.width:
             factor = scale_depth / image.height
@@ -20,11 +25,15 @@ def pixelate(input_file_path, pixel_size, scale_depth):
             factor = scale_depth/ image.width
         tn_image = image.resize((int(image.width * factor), int(image.height * factor)))
 
+
     image.save("pixelated.jpg")
     tn_image.save("scaled.jpg")
+    tn_image.convert('P').save('result.png')
+
+
 
 def pixelcalc():
-    with Image.open("pixelated.jpg") as image:
+    with Image.open("result.png") as image:
         color_count = {}
         width, height = image.size
         rgb_image = image.convert('RGB')
